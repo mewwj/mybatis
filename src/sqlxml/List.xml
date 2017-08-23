@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="listdao.Ilist">
+
+  <resultMap type="info.Items" id="itemResult">
+    <id column="ID" jdbcType="INTEGER" property="id"/>
+    <result column="field1" jdbcType="VARCHAR" property="field1"/>
+    <result column="field2" jdbcType="VARCHAR" property="field2"/>
+  </resultMap>
+
+  <select id="allchat" parameterType="info.Items" resultMap="itemResult">
+   SELECT * from firstchat where 1=1
+   <if test="field1!=null and!&quot;&quot;.equals(field1.trim())"> and field1=#{field1} </if>
+      <if test="field2!=null and!&quot;&quot;.equals(field2.trim())"> and field2 like'%' #{field2} '%'</if>
+  </select>
+  <select id="selectoneitem" parameterType="info.Items" resultMap="itemResult">
+   SELECT * from firstchat where id=#{id}
+  </select>
+   
+    <update id="updateitem" parameterType="info.Items" >
+    UPDATE firstchat SET field1=#{field1},field2=#{field2} WHERE ID=#{id}
+  </update>
+    
+    <select id="wechat" parameterType="String" resultType="String">
+   SELECT field2 from firstchat where field1=#{field1}
+  </select>
+  
+  <delete id="deleteoneitem" parameterType="int" >
+     DELETE FROM firstchat WHERE ID=#{_parameter}
+  </delete>
+  <delete id="deletebatch"  parameterType="java.util.List">
+    DELETE FROM firstchat WHERE ID in(
+    <foreach collection="list" item="item" separator=",">
+      #{item}
+    </foreach>
+    )
+  </delete>
+  <insert id="insert"  parameterType="java.util.List">
+    insert into firstchat(field1,field2) values(
+    <foreach collection="list" item="items" separator=",">
+      #{items}
+    </foreach>
+    )
+  </insert>
+</mapper>
